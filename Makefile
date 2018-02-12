@@ -11,14 +11,15 @@ complete = @echo "\033[92mComplete\033[0m"
 cleaning = @echo "\033[36mCleaning complete\033[0m"
 
 SRC_NAME = ft_ls.c \
-		   ls_permissions.c
+		   ls_permissions.c \
+		   ls_time.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 INC = $(addprefix -I, $(INC_PATH))
-LIB = -L ./libft -lft
+LIB = -L ./libft -lftprintf
 
 .PHONY : all clean fclean re
 
@@ -56,6 +57,9 @@ fclean: clean
 	$(cleaning)
 	@echo "**************************************"
 
-debug: all
-	lldb ./fdf ./maps/elem.fdf
+test: all
+	./ft_ls
+
+lldb: all
+	gcc -g -Wall -Werror -Wextra $(SRC)
 re: fclean all

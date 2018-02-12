@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/07 15:14:40 by fmadura           #+#    #+#             */
-/*   Updated: 2017/12/07 15:18:37 by fmadura          ###   ########.fr       */
+/*   Created: 2017/12/02 17:22:18 by fmadura           #+#    #+#             */
+/*   Updated: 2017/12/26 17:16:42 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 char	*ft_strljoin(char *s1, char *s2)
 {
-	char	*tmp;
+	char	*join;
 
-	if (s1 == NULL && s2 == NULL)
-		return (NULL);
-	tmp = ft_strjoin(s1, s2);
-	if (s1 != NULL)
+	join = ft_strjoin(s1, s2);
+	if (s1)
+	{
 		free(s1);
-	if (s2 != NULL)
-		free(s2);
-	return (tmp);
+		s1 = NULL;
+	}
+	return (join);
 }
