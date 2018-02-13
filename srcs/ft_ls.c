@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/12 16:26:06 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/02/13 19:58:23 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,16 @@ static void	ls_a(void)
 	}
 	ls_printa(first, field);
 	printf("\n");
+}
+ssize_t listxattr(const char *path, char *namebuf, size_t size, int options);
+static void attr(void)
+{
+	char	*path = ft_strdup("./");
+	char	*buffer[156];
+	size_t	size = 155;
+	buffer[155] = '\0';
+
+	while ()
 }
 
 int		main(void)
