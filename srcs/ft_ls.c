@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/13 19:58:23 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/02/14 18:29:30 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,16 @@ static void	ls_printl(t_stat *iter, t_field *field)
 	{
 		freestat = iter;
 		stats = iter->v_stat;
-		printf("%s  ", get_permissions(stats.st_mode));
-		printf("%*hu ", field->len_link, stats.st_nlink);
-		printf("%*s  ", field->len_suid, iter->pwd->pw_name);
-		printf("%*s  ", field->len_guid, iter->grp->gr_name);
-		printf("%*lld ", field->len_size, stats.st_size);
-		printf("%*s ", field->len_date, format_time(ctime(&stats.st_mtime)));
-		printf("%s\n", iter->filename);
+		if (iter->filename && iter->filename[0] == '.' && !S_ISDIR(stats.st_mode))
+		{
+			printf("%s  ", get_permissions(stats.st_mode));
+			printf("%*hu ", field->len_link, stats.st_nlink);
+			printf("%*s  ", field->len_suid, iter->pwd->pw_name);
+			printf("%*s  ", field->len_guid, iter->grp->gr_name);
+			printf("%*lld ", field->len_size, stats.st_size);
+			printf("%*s ", field->len_date, format_time(ctime(&stats.st_mtime)));
+			printf("%s\n", iter->filename);
+		}
 		free(iter->filename);
 		iter = iter->next;
 		free(freestat);
@@ -171,36 +174,77 @@ static void	ls_a(void)
 	struct dirent	*files = NULL;
 	DIR 			*dir = NULL;
 	t_field			*field;
-	t_stat			*first;
-	t_stat			*iter;
+	t_stat			*first_upper;
+	t_stat			*first_lower;
+	t_stat			*first_dot;
+	t_stat			*iter_upper;
+	t_stat			*iter_lower;
+	t_stat			*iter_dot;
 	
 	field = ls_newfield();
 	dir = opendir(dirname);
-	if ((files = readdir(dir)))
+	iter_upper = NULL;
+	iter_lower = NULL;
+	iter_dot = NULL;
+/*	if ((files = readdir(dir)))
 	{
 		if ((first = new_stat_a(files->d_name)) == NULL)
 				return ;
 		ls_setfield_a(first, field);
 		iter = first;
-	}
+	}*/
 	while ((files = readdir(dir)))
 	{
-		iter->next = new_stat_a(files->d_name);
-		iter = iter->next;
-		ls_setfield_a(iter, field);
+		if (files->d_name[0] == '.')
+		{
+			if (!iter_dot)
+			{
+				first_dot = new_stat_a(files->d_name);
+				iter_dot = first_dot;
+				ls_setfield_a(first_dot, field);
+			}
+			else
+			{
+				iter_dot->next = new_stat_a(files->d_name);
+				iter_dot = iter_dot->next;
+				ls_setfield_a(iter_dot, field);
+			}
+		}
+		else if (ft_isupper(files->d_name[0]))
+		{
+			if (!iter_upper)
+			{
+				first_upper = new_stat_a(files->d_name);
+				iter_upper = first_upper;
+				ls_setfield_a(first_upper, field);
+			}
+			else
+			{
+				iter_upper->next = new_stat_a(files->d_name);
+				iter_upper = iter_upper->next;
+				ls_setfield_a(iter_upper, field);
+			}
+		}
+		else if (ft_islower(files->d_name[0]))
+		{
+			if (!iter_lower)
+			{
+				first_lower = new_stat_a(files->d_name);
+				iter_lower = first_lower;
+				ls_setfield_a(iter_lower, field);
+			}
+			else
+			{
+				iter_lower->next = new_stat_a(files->d_name);
+				iter_lower = iter_lower->next;
+				ls_setfield_a(iter_lower, field);
+			}
+		}
 	}
-	ls_printa(first, field);
+	ls_printa(first_dot, field);
+	ls_printa(first_upper, field);
+	ls_printa(first_lower, field);
 	printf("\n");
-}
-ssize_t listxattr(const char *path, char *namebuf, size_t size, int options);
-static void attr(void)
-{
-	char	*path = ft_strdup("./");
-	char	*buffer[156];
-	size_t	size = 155;
-	buffer[155] = '\0';
-
-	while ()
 }
 
 int		main(void)
