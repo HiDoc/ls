@@ -61,5 +61,5 @@ test: all
 	./ft_ls
 
 lldb: all
-	gcc -g -Wall -Werror -Wextra $(SRC)
+	gcc -g -Wall -Werror -Wextra -I ./includes -I ./libft/includes -L ./libft -lftprintf  $(SRC)
 re: fclean all

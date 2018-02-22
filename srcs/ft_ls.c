@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/14 18:29:30 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/02/22 16:47:27 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static t_stat	*new_stat_a(char *filename)
 	new->next = NULL;
 	return (new);
 }
-
 
 static void	ls_printa(t_stat *iter, t_field *field)
 {
@@ -102,7 +101,7 @@ static int	ls_getlen(unsigned long long len)
 static t_field	*ls_newfield(void)
 {
 	t_field *new;
-	
+
 	new = malloc(sizeof(t_field));
 	new->len_link = 0;
 	new->len_suid = 0;
@@ -155,7 +154,7 @@ static void	ls_l(void)
 	if ((files = readdir(dir)))
 	{
 		if ((first = new_stat(files->d_name)) == NULL)
-				return ;
+			return ;
 		ls_setfield(first, field);
 		iter = first;
 	}
@@ -180,19 +179,13 @@ static void	ls_a(void)
 	t_stat			*iter_upper;
 	t_stat			*iter_lower;
 	t_stat			*iter_dot;
-	
+
 	field = ls_newfield();
 	dir = opendir(dirname);
 	iter_upper = NULL;
 	iter_lower = NULL;
 	iter_dot = NULL;
-/*	if ((files = readdir(dir)))
-	{
-		if ((first = new_stat_a(files->d_name)) == NULL)
-				return ;
-		ls_setfield_a(first, field);
-		iter = first;
-	}*/
+
 	while ((files = readdir(dir)))
 	{
 		if (files->d_name[0] == '.')
@@ -246,10 +239,16 @@ static void	ls_a(void)
 	ls_printa(first_lower, field);
 	printf("\n");
 }
+     #include <sys/ioctl.h>
 
 int		main(void)
 {
-	(void)ls_l;
+	struct ttysize ts;
+
+	ioctl(0, TIOCGSIZE, &ts);
+	printf ("lines %d\n", ts.ts_lines);
+	printf ("columns %d\n", ts.ts_cols);
+	(void)ls_l;	
 	ls_a();
 	return (0);
 }
