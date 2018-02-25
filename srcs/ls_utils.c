@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*   ls_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 15:11:28 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/25 14:55:25 by fmadura           #+#    #+#             */
+/*   Updated: 2018/02/25 14:56:05 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int		main(void)
+int    ls_getlen(unsigned long long len)
 {
-	char			*dirname;
-	struct dirent	*files;
-	DIR				*dir;
-	t_field			*field;
-	(void)ls_l;
+	unsigned long long	length;
+	int					ret;
 
-	files = NULL;
-	field = ls_newfield();
-	dirname = ft_strdup("./");
-	dir = opendir(dirname);
-	ls_a(files, dir, field);
-	return (0);
+	ret = 0;
+	length = (long long unsigned)(len);
+	while (length > 10)
+	{
+		length /= 10;
+		ret++;
+	}
+	return (ret + 1);
 }

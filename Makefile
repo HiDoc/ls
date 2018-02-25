@@ -12,6 +12,12 @@ cleaning = @echo "\033[36mCleaning complete\033[0m"
 
 SRC_NAME = ft_ls.c \
 		   ls_permissions.c \
+		   ls_field.c \
+		   ls_list.c \
+		   ls_stat.c \
+		   ls_utils.c \
+		   ls_a.c \
+		   ls_l.c \
 		   ls_time.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
@@ -34,8 +40,13 @@ $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) $(LIB) $(OBJ) $(INC) -o $(NAME)
 	$(complete)
 
+$(OBJ) : | $(OBJ_PATH)
+
+$(OBJ_PATH) :
+	@mkdir ./objs
+
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@echo "Compilating files into binaries.."
+	@echo "Compilating $< into binaries.."
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 clean:
@@ -45,7 +56,7 @@ clean:
 	$(cleaning)
 	@echo "**************************************"
 	@echo "\033[33mCleaning process for $(NAME) engaged..\033[0m"
-	@echo "Removing fdf binaries.."
+	@echo "Removing $(NAME) binaries.."
 	@rm -f $(OBJ)
 	$(cleaning)
 

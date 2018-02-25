@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*   ls_field.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 15:11:28 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/25 14:52:07 by fmadura           #+#    #+#             */
+/*   Updated: 2018/02/25 15:01:51 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int		main(void)
+static int	ls_colums(void)
 {
-	char			*dirname;
-	struct dirent	*files;
-	DIR				*dir;
-	t_field			*field;
-	(void)ls_l;
+	struct ttysize ts;
 
-	files = NULL;
-	field = ls_newfield();
-	dirname = ft_strdup("./");
-	dir = opendir(dirname);
-	ls_a(files, dir, field);
-	return (0);
+	ioctl(0, TIOCGSIZE, &ts);
+	return (ts.ts_cols);
+}
+
+t_field		*ls_newfield(void)
+{
+	t_field *new;
+
+	new = malloc(sizeof(t_field));
+	new->len_link = 0;
+	new->len_suid = 0;
+	new->len_guid = 0;
+	new->len_size = 0;
+	new->len_date = 0;
+	new->len_name = 0;
+	new->len_cols = ls_colums();
+	return (new);
 }

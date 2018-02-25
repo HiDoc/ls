@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*   ls_stat.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 15:11:28 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/25 18:06:40 by fmadura           #+#    #+#             */
+/*   Updated: 2018/02/25 18:07:12 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int		main(void)
+t_stat    *new_stat(char *filename)
 {
-	char			*dirname;
-	struct dirent	*files;
-	DIR				*dir;
-	t_field			*field;
-	(void)ls_l;
+	t_stat	*new;
 
-	files = NULL;
-	field = ls_newfield();
-	dirname = ft_strdup("./");
-	dir = opendir(dirname);
-	ls_a(files, dir, field);
-	return (0);
+	if ((new = (t_stat *)malloc(sizeof(t_stat))) == NULL)
+		return (NULL);
+	if ((lstat(filename, &new->v_stat)))
+		return (NULL);
+	new->filename = ft_strdup(filename);
+	new->grp = getgrgid(new->v_stat.st_gid);
+	new->pwd = getpwuid(new->v_stat.st_uid);
+	new->next = NULL;
+	return (new);
 }
