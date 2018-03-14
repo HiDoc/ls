@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/25 15:27:33 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 18:12:00 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/26 13:08:06 by fmadura           #+#    #+#             */
+/*   Updated: 2018/03/14 15:35:32 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-t_lists	*ls_new_list(void)
+t_lists			*ls_new_list(void)
 {
 	t_lists		*new;
 
@@ -27,26 +27,27 @@ t_lists	*ls_new_list(void)
 	return (new);
 }
 
-
-static t_stat        *lst_switch(char c, t_lists *lst, int first)
+static t_stat	*lst_switch(char c, t_lists *lst, int first)
 {
 	if (c == '.' && first)
 		return (lst->first_dot);
-	if (c == '.' && !first)
+	else if (c == '.' && !first)
 		return (lst->iter_dot);
-	if (ft_isupper(c) && first)
+	else if (ft_isupper(c) && first)
 		return (lst->first_upper);
-	if (ft_isupper(c) && !first)
+	else if (ft_isupper(c) && !first)
 		return (lst->iter_upper);
-	if (ft_islower(c) && first)
+	else if (ft_islower(c) && first)
 		return (lst->first_lower);
-	if (ft_islower(c) && !first)
+	else if (ft_islower(c) && !first)
 		return (lst->iter_lower);
 	return (NULL);
 }
 
-static t_lists        *lst_reverse_switch(char c, t_lists *lst, int first, t_stat *stat)
+static t_lists	*lst_reverse_switch(
+		char c, t_lists *lst, int first, t_stat *stat)
 {
+
 	if (c == '.' && first)
 		(lst->first_dot = stat);
 	if (c == '.' && !first)
@@ -62,25 +63,26 @@ static t_lists        *lst_reverse_switch(char c, t_lists *lst, int first, t_sta
 	return (lst);
 }
 
-t_lists            *lst_append(t_lists *lst, struct dirent *files, t_field *field, char c)
+t_lists			*lst_append(t_lists *lst, t_stat *stat)
 {
-	t_stat    *iter;
-	t_stat    *first;
+	t_stat	*first;
+	t_stat	*iter;
+	int 	c;
 
-	(void)field;
+	c = stat->filename[0];
 	iter = lst_switch(c, lst, 0);
 	first = lst_switch(c, lst, 1);
-	if (!iter)
+	if (!first)
 	{
-		first = new_stat(files->d_name);
+		first = stat;
 		iter = first;
+		lst_reverse_switch(c, lst, 1, first);
 	}
 	else
 	{
-		iter->next = new_stat(files->d_name);
+		iter->next = stat;
 		iter = iter->next;
 	}
 	lst_reverse_switch(c, lst, 0, iter);
-	lst_reverse_switch(c, lst, 1, first);
 	return (lst);
 }

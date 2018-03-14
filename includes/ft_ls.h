@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:57:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 18:08:27 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/03/14 15:54:36 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <time.h>
+# include <errno.h>
 
 typedef struct		s_stat
 {
@@ -70,11 +71,12 @@ int					ls_getlen(unsigned long long len);
 
 t_field				*ls_newfield(void);
 
-t_stat				*new_stat(char *filename);
+t_stat				*new_stat(char *filename, char *dirname);
 
 t_lists				*ls_new_list(void);
-t_lists				*lst_append(t_lists *lst, struct dirent *files, t_field *field, char c);
+t_lists				*lst_append(t_lists *lst, t_stat *stat);
 
-void				ls_a(struct dirent *f, DIR *d, t_field *fl);
+t_stat				*ls_a(struct dirent *f, char *dirname, t_field *fl);
 void				ls_l(struct dirent *f, DIR *d, t_field *fl);
+void				ls_r(struct dirent *f, char *dirname);
 #endif

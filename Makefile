@@ -17,6 +17,7 @@ SRC_NAME = ft_ls.c \
 		   ls_stat.c \
 		   ls_utils.c \
 		   ls_a.c \
+		   ls_r.c \
 		   ls_l.c \
 		   ls_time.c
 
@@ -72,5 +73,10 @@ test: all
 	./ft_ls
 
 lldb: all
-	gcc -g -Wall -Werror -Wextra -I ./includes -I ./libft/includes -L ./libft -lftprintf  $(SRC)
+	gcc -g -I ./includes -I ./libft/includes -L ./libft -lftprintf  $(SRC)
+	lldb ./$(NAME)
+
+cleanlldb : 
+	@rm -rf ./a.out ./a.out.dSym/
+
 re: fclean all

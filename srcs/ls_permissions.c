@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 17:31:58 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/12 12:03:53 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/02/26 13:09:32 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ static char	get_char(int num)
 
 char		*get_permissions(mode_t st_mode)
 {
-	char perm[11];
+	char	perm[11];
+	int		count;
+	int		chmod;
 
-	int count = 9;
-	int chmod = st_mode % 512;
+	count = 9;
+	chmod = st_mode % 512;
 	while (count > 0)
 	{
 		if (chmod & 1)
@@ -35,7 +37,7 @@ char		*get_permissions(mode_t st_mode)
 		else
 			perm[count] = '-';
 		count--;
-		chmod >>= 1;	
+		chmod >>= 1;
 	}
 	perm[0] = (S_ISDIR(st_mode)) ? 'd' : '-';
 	perm[10] = '\0';

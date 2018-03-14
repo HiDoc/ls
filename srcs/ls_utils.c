@@ -6,13 +6,13 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/25 14:55:25 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 14:56:05 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/03/14 14:03:33 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int    ls_getlen(unsigned long long len)
+int	ls_getlen(unsigned long long len)
 {
 	unsigned long long	length;
 	int					ret;

@@ -6,26 +6,11 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/25 14:46:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 15:18:21 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/03/14 15:57:24 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-static t_stat	*new_stat(char *filename)
-{
-	t_stat		*new;
-
-	if ((new = (t_stat *)malloc(sizeof(t_stat))) == NULL)
-		return (NULL);
-	if ((lstat(filename, &new->v_stat)))
-		return (NULL);
-	new->filename = ft_strdup(filename);
-	new->grp = getgrgid(new->v_stat.st_gid);
-	new->pwd = getpwuid(new->v_stat.st_uid);
-	new->next = NULL;
-	return (new);
-}
 
 static void		ls_print(t_stat *iter, t_field *field)
 {
@@ -36,14 +21,15 @@ static void		ls_print(t_stat *iter, t_field *field)
 	{
 		freestat = iter;
 		stats = iter->v_stat;
-		if (iter->filename && iter->filename[0] == '.' && !S_ISDIR(stats.st_mode))
+		if (iter->filename && iter->filename[0] != '.')
 		{
 			printf("%s  ", get_permissions(stats.st_mode));
 			printf("%*hu ", field->len_link, stats.st_nlink);
 			printf("%*s  ", field->len_suid, iter->pwd->pw_name);
 			printf("%*s  ", field->len_guid, iter->grp->gr_name);
 			printf("%*lld ", field->len_size, stats.st_size);
-			printf("%*s ", field->len_date, format_time(ctime(&stats.st_mtime)));
+			printf("%*s ", field->len_date,
+				format_time(ctime(&stats.st_mtime)));
 			printf("%s\n", iter->filename);
 		}
 		free(iter->filename);
@@ -73,21 +59,22 @@ static void		ls_setfield(t_stat *stat, t_field *field)
 
 void			ls_l(struct dirent *files, DIR *dir, t_field *field)
 {
-	t_stat			*first;
-	t_stat			*iter;
+	t_lists		*lst;
+	t_stat		*iter;
 
-	if ((files = readdir(dir)))
-	{
-		if ((first = new_stat(files->d_name)) == NULL)
-			return ;
-		ls_setfield(first, field);
-		iter = first;
-	}
+	lst = ls_new_list();
 	while ((files = readdir(dir)))
 	{
-		iter->next = new_stat(files->d_name);
-		iter = iter->next;
-		ls_setfield(iter, field);
+		iter = new_stat(files->d_name, files->d_name);
+		lst_append(lst, iter);
+		if (files->d_name[0] == '.')
+			ls_setfield(lst->iter_dot, field);
+		else if (ft_isupper(files->d_name[0]))
+			ls_setfield(lst->iter_upper, field);
+		else if (ft_islower(files->d_name[0]))
+			ls_setfield(lst->iter_lower, field);
 	}
-	ls_print(first, field);
+	ls_print(lst->first_upper, field);
+	ls_print(lst->first_lower, field);
+	printf("\n");
 }

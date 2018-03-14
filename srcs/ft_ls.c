@@ -1,29 +1,31 @@
 /* ************************************************************************** */
-/*                                                                            */
+/* m                                                                           */
 /*                                                        :::      ::::::::   */
 /*   ft_ls.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:55:57 by fmadura           #+#    #+#             */
-/*   Updated: 2018/02/25 15:11:28 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/03/14 16:04:36 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int		main(void)
+int		main(int argc, char **argv)
 {
 	char			*dirname;
 	struct dirent	*files;
-	DIR				*dir;
 	t_field			*field;
-	(void)ls_l;
+	size_t			count;
 
-	files = NULL;
-	field = ls_newfield();
-	dirname = ft_strdup("./");
-	dir = opendir(dirname);
-	ls_a(files, dir, field);
+	if (argc > 1 && argc == 2)
+	{
+		count = 0;
+		files = NULL;
+		field = ls_newfield();
+		dirname = ft_strdup(argv[1]);
+		ls_r(files, dirname);
+	}
 	return (0);
 }
