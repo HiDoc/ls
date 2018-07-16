@@ -1,32 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*   ft_wstrdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:57:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/16 14:04:08 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/06 13:46:14 by fmadura           #+#    #+#             */
+/*   Updated: 2018/03/16 15:05:26 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	FT_LS_H
-# define FT_LS_H
-# include "libftprintf.h"
-# include <dirent.h>
-# include <grp.h>
-# include <pwd.h>
-# include <stdio.h>
-# include <sys/dir.h>
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <time.h>
-# include <errno.h>
+#include "libft.h"
 
-typedef struct	s_env
+wchar_t	*ft_wstrdup(const wchar_t *s1)
 {
+	int		len;
+	wchar_t	*dup;
+	int		count;
 
-}				t_env;
-char	*stat_mode(mode_t st_mode, int isdir);
-#endif
+	count = 0;
+	if (s1 == NULL)
+		return (NULL);
+	len = ft_wcslen(s1);
+	if ((dup = (wchar_t *)malloc(((sizeof(wchar_t) * len) + 1))) == NULL)
+		return (NULL);
+	while (count < len)
+	{
+		dup[count] = s1[count];
+		count++;
+	}
+	dup[count] = '\0';
+	return (dup);
+}

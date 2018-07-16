@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*   printf_convc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:57:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/16 14:04:08 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/07 14:48:38 by fmadura           #+#    #+#             */
+/*   Updated: 2018/06/01 14:41:25 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	FT_LS_H
-# define FT_LS_H
-# include "libftprintf.h"
-# include <dirent.h>
-# include <grp.h>
-# include <pwd.h>
-# include <stdio.h>
-# include <sys/dir.h>
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <time.h>
-# include <errno.h>
+#include "libftprintf.h"
 
-typedef struct	s_env
+void	format_char(t_arg *new)
 {
+	char	*tmp;
 
-}				t_env;
-char	*stat_mode(mode_t st_mode, int isdir);
-#endif
+	tmp = NULL;
+	if (!new->islower)
+	{
+		if (new->char0 > 0xFFFF)
+			new->field--;
+		if (new->char0 > 0x7FF)
+			new->field--;
+		if (new->char0 > 0xFF)
+			new->field--;
+	}
+	if (new->field > 1)
+	{
+		tmp = ft_strnew(new->field - 1);
+		ft_strset(tmp, new->is0 ? '0' : ' ', new->field - 1);
+		new->hformat = tmp;
+	}
+}

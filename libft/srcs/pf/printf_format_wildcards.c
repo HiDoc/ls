@@ -1,32 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*   printf_format_wildcards.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:57:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/16 14:04:08 by fmadura          ###   ########.fr       */
+/*   Created: 2018/02/21 12:33:13 by fmadura           #+#    #+#             */
+/*   Updated: 2018/05/15 16:05:37 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	FT_LS_H
-# define FT_LS_H
-# include "libftprintf.h"
-# include <dirent.h>
-# include <grp.h>
-# include <pwd.h>
-# include <stdio.h>
-# include <sys/dir.h>
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <time.h>
-# include <errno.h>
+#include "libftprintf.h"
 
-typedef struct	s_env
+void	set_wildcards(t_arg *new, va_list ap)
 {
-
-}				t_env;
-char	*stat_mode(mode_t st_mode, int isdir);
-#endif
+	if (new->wildfield != -1)
+	{
+		if ((new->wildfield = va_arg(ap, int)) < 0 && !new->field)
+			new->ismins = 1;
+		if (!new->field)
+			new->field = ABS(new->wildfield);
+	}
+	if (new->wildpreci != -1)
+	{
+		new->preci = va_arg(ap, int);
+		new->hpreci = new->preci > -1;
+	}
+}

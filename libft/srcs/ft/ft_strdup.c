@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 16:57:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/16 14:04:08 by fmadura          ###   ########.fr       */
+/*   Created: 2017/11/09 14:32:10 by fmadura           #+#    #+#             */
+/*   Updated: 2018/06/01 12:13:55 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	FT_LS_H
-# define FT_LS_H
-# include "libftprintf.h"
-# include <dirent.h>
-# include <grp.h>
-# include <pwd.h>
-# include <stdio.h>
-# include <sys/dir.h>
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <time.h>
-# include <errno.h>
+#include "libft.h"
 
-typedef struct	s_env
+char	*ft_strdup(const char *s1)
 {
+	int		len;
+	char	*dup;
+	int		count;
 
-}				t_env;
-char	*stat_mode(mode_t st_mode, int isdir);
-#endif
+	count = 0;
+	dup = NULL;
+	len = ft_strlen(s1);
+	if ((dup = (char *)malloc(((sizeof(char) * len) + 1))) == NULL)
+		return (NULL);
+	while (count < len)
+	{
+		dup[count] = s1[count];
+		count++;
+	}
+	dup[count] = s1[count];
+	return (dup);
+}
