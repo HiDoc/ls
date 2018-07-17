@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/07/16 11:14:22 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/17 17:53:10 by fmadura          ###   ########.fr       */
+/*   Created: 2018/07/17 16:52:02 by fmadura           #+#    #+#             */
+/*   Updated: 2018/07/17 17:09:08 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	list_dir(t_env *env, char *dirname)
+void	print_dir(char *dirname)
 {
 	DIR				*dir;
 	struct dirent	*entry;
 	struct stat		buf;
 
-	(void)env;
 	dir = opendir(dirname);
 	while ((entry = readdir(dir)) > 0)
 	{
@@ -32,15 +31,4 @@ void	list_dir(t_env *env, char *dirname)
 		printf("%-10s\n", entry->d_name);
 	}
 	closedir(dir);
-}
-
-int		main(int argc, char **argv)
-{
-	t_env	env;
-
-	env_init(&env);
-	(void)argc;
-	(void)argv;
-	print_dir(".");
-	return (0);
 }

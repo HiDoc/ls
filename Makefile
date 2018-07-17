@@ -6,7 +6,7 @@
 #    By: fmadura <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/16 11:12:15 by fmadura           #+#    #+#              #
-#    Updated: 2018/07/16 13:20:06 by fmadura          ###   ########.fr        #
+#    Updated: 2018/07/17 17:41:51 by fmadura          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,11 @@ INC_PATH = ./includes/ \
 		   ./libft/includes/
 
 SRC_NAME = ft_ls.c \
-		   utils_stat.c
+		   struct_env.c \
+		   struct_obj.c \
+		   print.c \
+		   utils_stat.c \
+		   utils_env.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
@@ -53,7 +57,6 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIB) $(INC) -o $(NAME)
-	$(complete)
 
 $(OBJ) : | $(OBJ_PATH)
 
@@ -64,11 +67,9 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 clean:
-	@rm -f $(OBJ)
-	$(cleaning)
+	@rm -rf $(OBJ_PATH)
 
 fclean: clean
 	@rm -f $(NAME)
-	$(cleaning)
 
 re: fclean all
