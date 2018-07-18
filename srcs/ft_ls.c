@@ -6,32 +6,71 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 11:14:22 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/17 17:53:10 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/07/18 15:17:27 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	list_dir(t_env *env, char *dirname)
+int		list_dir_buf(t_dir *dir)
 {
-	DIR				*dir;
-	struct dirent	*entry;
-	struct stat		buf;
+	t_obj	*obj;
 
-	(void)env;
-	dir = opendir(dirname);
-	while ((entry = readdir(dir)) > 0)
+	obj = obj_new_empty();
+	if ((obj->entry = readdir(dir->dir)) == NULL)
 	{
-		stat(entry->d_name, &buf);
-		printf("%-12s", stat_mode(buf.st_mode, (entry->d_type == 4)));
-		printf("%2hu ", buf.st_nlink);
-		printf("%-9s", getpwuid(buf.st_uid)->pw_name);
-		printf("%-12s", getgrgid(buf.st_gid)->gr_name);
-		printf("%4lld ", buf.st_size);
-		printf("%.12s ", &ctime(&buf.st_mtime)[4]);
-		printf("%-10s\n", entry->d_name);
+		free(obj->stat);
+		free(obj);
+		perror("ft_ls:");
+		return (0);
 	}
-	closedir(dir);
+	printf("hello :%s\n", obj->entry->d_name);
+	if ((stat(obj->entry->d_name, obj->stat)) == -1)
+	{
+		free(obj->stat);
+		free(obj);
+		perror("ls");
+		return (-1);
+	}
+	if (obj->entry->d_name[0])
+	{
+		if (obj->entry->d_name[0] == '.')
+			dir_add_list(dir, obj, LIST_DOT);
+		else if (ft_isupper(obj->entry->d_name[0]))
+			dir_add_list(dir, obj, LIST_CAP);
+		else
+			dir_add_list(dir, obj, LIST_MIN);
+	}
+	return (1);
+}
+
+int		list_dir(t_env *env, char *dirname)
+{
+	t_dir	*dir;
+	int		ret;
+
+	ret = 0;
+	printf("%s \n", dirname);
+	dir = dir_new(dirname);
+	while ((ret = list_dir_buf(dir)) != 0)
+		;
+	print_dir(dir);
+	if (env->flag == 0)
+	{
+		dir_res_iter(dir);
+		while (dir->i_cap)
+		{
+			dir->i_cap->entry->d_type == DT_DIR ? list_dir(env, dir->i_cap->entry->d_name) : 0;
+			dir->i_cap = dir->i_cap->next;
+		}
+		while (dir->i_min)
+		{
+			dir->i_min->entry->d_type == DT_DIR ? list_dir(env, dir->i_min->entry->d_name) : 0;
+			dir->i_min = dir->i_min->next;
+		}
+	}
+	dir_del(dir);
+	return (ret);
 }
 
 int		main(int argc, char **argv)
@@ -41,6 +80,6 @@ int		main(int argc, char **argv)
 	env_init(&env);
 	(void)argc;
 	(void)argv;
-	print_dir(".");
+	list_dir(&env, ".");
 	return (0);
 }

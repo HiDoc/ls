@@ -6,29 +6,44 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:52:02 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/17 17:09:08 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/07/18 13:12:03 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	print_dir(char *dirname)
+inline static void	dir_print_all(t_obj *obj)
 {
-	DIR				*dir;
-	struct dirent	*entry;
-	struct stat		buf;
-
-	dir = opendir(dirname);
-	while ((entry = readdir(dir)) > 0)
+	if (obj)
 	{
-		stat(entry->d_name, &buf);
-		printf("%-12s", stat_mode(buf.st_mode, (entry->d_type == 4)));
-		printf("%2hu ", buf.st_nlink);
-		printf("%-9s", getpwuid(buf.st_uid)->pw_name);
-		printf("%-12s", getgrgid(buf.st_gid)->gr_name);
-		printf("%4lld ", buf.st_size);
-		printf("%.12s ", &ctime(&buf.st_mtime)[4]);
-		printf("%-10s\n", entry->d_name);
+		stat_mode(obj->stat->st_mode, (obj->entry->d_type == 4));
+		printf("%2hu ", obj->stat->st_nlink);
+		printf("%-9s", getpwuid(obj->stat->st_uid)->pw_name);
+		printf("%-12s", getgrgid(obj->stat->st_gid)->gr_name);
+		printf("%4lld ", obj->stat->st_size);
+		printf("%.12s ", &ctime(&obj->stat->st_mtime)[4]);
+		printf("%-10s\n", obj->entry->d_name);
 	}
-	closedir(dir);
+}
+
+void				print_dir(t_dir *dir)
+{
+	dir->i_dot = dir->f_dot;
+	dir->i_cap = dir->f_cap;
+	dir->i_min = dir->f_min;
+	while (dir->i_dot)
+	{
+		dir_print_all(dir->i_dot);
+		dir->i_dot = dir->i_dot->next;
+	}
+	while (dir->i_cap)
+	{
+		dir_print_all(dir->i_cap);
+		dir->i_cap = dir->i_cap->next;
+	}
+	while (dir->i_min)
+	{
+		dir_print_all(dir->i_min);
+		dir->i_min = dir->i_min->next;
+	}
 }

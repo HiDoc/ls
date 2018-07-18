@@ -6,7 +6,7 @@
 #    By: fmadura <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/16 11:12:15 by fmadura           #+#    #+#              #
-#    Updated: 2018/07/17 17:41:51 by fmadura          ###   ########.fr        #
+#    Updated: 2018/07/18 13:26:25 by fmadura          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,10 +38,13 @@ INC_PATH = ./includes/ \
 
 SRC_NAME = ft_ls.c \
 		   struct_env.c \
+		   struct_dir.c \
 		   struct_obj.c \
 		   print.c \
-		   utils_stat.c \
+		   utils_dir.c \
+		   utils_obj.c \
 		   utils_env.c \
+		   utils_stat.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
@@ -71,5 +74,8 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+
+fsan: $(OBJ)
+	@$(CC) $(CFLAGS) -g -fsanitize=address $(OBJ) $(LIB) $(INC) -o $(NAME)
 
 re: fclean all

@@ -6,13 +6,13 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 12:46:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/17 17:50:03 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/07/18 13:10:15 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char	*stat_mode(mode_t st_mode, int isdir)
+void	stat_mode(mode_t st_mode, int isdir)
 {
 	char	protection[11];
 	int		count;
@@ -29,5 +29,5 @@ char	*stat_mode(mode_t st_mode, int isdir)
 		protection[count--] = ((st_mode & 4) == 4) ? 'r' : '-';
 		st_mode >>= 3;
 	}
-	return (ft_strdup(protection));
+	printf("%-12s", protection);
 }
