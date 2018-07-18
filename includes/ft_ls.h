@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 17:06:09 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 14:19:37 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/07/18 19:43:32 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 # define LIST_DOT 1
 # define LIST_CAP 2
 # define LIST_MIN 3
+# define DOT_TYPE dir->i_dot->entry->d_type
+# define DOT_NAME dir->i_dot->entry->d_name
+# define CAP_TYPE dir->i_cap->entry->d_type
+# define CAP_NAME dir->i_cap->entry->d_name
+# define MIN_TYPE dir->i_min->entry->d_type
+# define MIN_NAME dir->i_min->entry->d_name
 # include "libftprintf.h"
 # include <dirent.h>
 # include <grp.h>
@@ -39,6 +45,7 @@ t_obj			*obj_new_empty(void);
 typedef struct	s_dir
 {
 	DIR				*dir;
+	char			*dirname;
 	struct s_obj	*f_dot;
 	struct s_obj	*f_cap;
 	struct s_obj	*f_min;

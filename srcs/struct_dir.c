@@ -6,7 +6,7 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/18 11:27:07 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 15:12:05 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/07/18 19:45:49 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,13 @@ t_dir				*dir_new(char *dirname)
 
 	if ((dir = malloc(sizeof(t_dir))) == NULL)
 		return (NULL);
-	dir->dir = opendir(dirname);
+	if ((dir->dir = opendir(dirname)) == NULL)
+	{
+		free(dir);
+		perror("ft_ls");
+		return (NULL);
+	}
+	dir->dirname = dirname;
 	dir->f_dot = NULL;
 	dir->f_cap = NULL;
 	dir->f_min = NULL;
