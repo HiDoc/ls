@@ -6,11 +6,12 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 11:14:22 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 19:47:03 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/07/19 13:59:22 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+int		list_dir(t_env *env, char *dirname);
 
 static char *getname_obj(t_dir *dir, t_obj *obj)
 {
@@ -25,6 +26,20 @@ static char *getname_obj(t_dir *dir, t_obj *obj)
 	return (tmp);
 }
 
+static int list_free(t_obj *obj, char *tmp)
+{
+	if (obj)
+	{
+		free(obj->stat);
+		free(obj);
+	}
+	if (tmp)
+	{
+		free(tmp);
+		return (-1);
+	}
+	return (0);
+}
 int		list_dir_buf(t_dir *dir)
 {
 	t_obj	*obj;
@@ -33,19 +48,10 @@ int		list_dir_buf(t_dir *dir)
 	tmp = NULL;
 	obj = obj_new_empty();
 	if (!dir || (obj->entry = readdir(dir->dir)) == NULL)
-	{
-		free(obj->stat);
-		free(obj);
-		return (0);
-	}
+		return (list_free(obj, tmp));
 	tmp = getname_obj(dir, obj);
 	if ((stat(tmp, obj->stat)) == -1)
-	{
-		free(obj->stat);
-		free(obj);
-		free(tmp);
-		return (-1);
-	}
+		return (list_free(obj, tmp));
 	if (obj->entry->d_name[0])
 	{
 		if (obj->entry->d_name[0] == '.')
@@ -77,14 +83,33 @@ static char *getname(char *dirname, t_dir *dir, int listn)
 	return (tmp);
 }
 
+void	list_dir_iter(t_env *env, t_dir *dir, char *dirname, int listn)
+{
+	char *tmpdir;
+
+	tmpdir = NULL;
+	while (listn == LIST_CAP ? dir->i_cap : dir->i_min)
+	{
+		if ((listn == LIST_CAP ? CAP_TYPE : MIN_TYPE) == DT_DIR)
+		{
+			tmpdir = getname(dirname, dir, listn);
+			printf("\n");
+			list_dir(env, tmpdir);
+			free(tmpdir);
+			tmpdir = NULL;
+		}
+		listn == LIST_CAP ? dir->i_cap = dir->i_cap->next : 0;
+		listn == LIST_MIN ? dir->i_min = dir->i_min->next : 0;
+	}
+}
+
 int		list_dir(t_env *env, char *dirname)
 {
 	t_dir	*dir;
-	char	*tmpdir;
 	int		ret;
 
 	ret = 0;
-	printf("%s \n", dirname);
+	printf("%s\n", dirname);
 	if ((dir = dir_new(dirname)) == NULL)
 		return (1);
 	while ((ret = list_dir_buf(dir)) != 0)
@@ -94,28 +119,8 @@ int		list_dir(t_env *env, char *dirname)
 	if (env->flag == 0)
 	{
 		dir_res_iter(dir);
-		while (dir->i_cap)
-		{
-			if (CAP_TYPE == DT_DIR)
-			{
-				tmpdir = getname(dirname, dir, LIST_CAP);
-				list_dir(env, tmpdir);
-				free(tmpdir);
-				tmpdir = NULL;
-			}
-			dir->i_cap = dir->i_cap->next;
-		}
-		while (dir->i_min)
-		{
-			if (MIN_TYPE == DT_DIR)
-			{
-				tmpdir = getname(dirname, dir, LIST_MIN);
-				list_dir(env, tmpdir);
-				free(tmpdir);
-				tmpdir = NULL;
-			}
-			dir->i_min = dir->i_min->next;
-		}
+		list_dir_iter(env, dir, dirname, LIST_CAP);
+		list_dir_iter(env, dir, dirname, LIST_MIN);
 	}
 	dir_del(dir);
 	return (ret);
@@ -128,6 +133,6 @@ int		main(int argc, char **argv)
 	env_init(&env);
 	(void)argc;
 	(void)argv;
-	list_dir(&env, "/");
+	list_dir(&env, "/dev/fd");
 	return (0);
 }

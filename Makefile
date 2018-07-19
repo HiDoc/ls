@@ -6,7 +6,7 @@
 #    By: fmadura <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/16 11:12:15 by fmadura           #+#    #+#              #
-#    Updated: 2018/07/18 19:34:02 by fmadura          ###   ########.fr        #
+#    Updated: 2018/07/19 12:37:20 by fmadura          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,7 @@ fclean: clean
 
 fsan: $(OBJ)
 	@$(CC) $(CFLAGS) -g -fsanitize=address $(OBJ) $(LIB) $(INC) -o $(NAME)
+	@./ft_ls
 
 lldb:
 	@$(CC) $(CFLAGS) -g  $(SRC) $(LIB) $(INC) -o $(NAME)
