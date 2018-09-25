@@ -6,17 +6,18 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 12:46:34 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 13:10:15 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/09/25 14:25:40 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "ls_includes.h"
 
 void	stat_mode(mode_t st_mode, int isdir)
 {
 	char	protection[11];
 	int		count;
 
+	ft_bzero(protection, 11);
 	count = 9;
 	st_mode = st_mode & 0777;
 	ft_strset((char *)protection, '-', 10);

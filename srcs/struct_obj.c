@@ -6,11 +6,11 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:54:09 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 14:16:41 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/09/25 17:02:50 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "ls_includes.h"
 
 t_obj	*obj_new_empty(void)
 {
@@ -24,6 +24,7 @@ t_obj	*obj_new_empty(void)
 		return (NULL);
 	}
 	new->entry = NULL;
+	new->name = NULL;
 	new->next = NULL;
 	return (new);
 }

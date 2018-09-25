@@ -6,11 +6,11 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/18 11:27:07 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 19:49:22 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/09/25 17:03:11 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "ls_includes.h"
 
 static inline void	dir_del_iter(t_obj *first, t_obj *iter)
 {
@@ -18,6 +18,7 @@ static inline void	dir_del_iter(t_obj *first, t_obj *iter)
 	{
 		first = iter->next;
 		free(iter->stat);
+		free(iter->name);
 		free(iter);
 		iter = first;
 	}
@@ -33,7 +34,7 @@ void				dir_del(t_dir *dir)
 	free(dir);
 }
 
-t_dir				*dir_new(char *dirname)
+t_dir				*dir_new(t_env *env, char *dirname)
 {
 	t_dir	*dir;
 
@@ -45,6 +46,7 @@ t_dir				*dir_new(char *dirname)
 		perror("ft_ls");
 		return (NULL);
 	}
+	dir->env = env;
 	dir->dirname = dirname;
 	dir->f_dot = NULL;
 	dir->f_cap = NULL;

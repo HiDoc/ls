@@ -6,11 +6,11 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 17:11:27 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/18 15:11:38 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/09/25 17:05:42 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "ls_includes.h"
 
 static void	dir_add_dot(t_dir *dir, t_obj *add)
 {
@@ -63,6 +63,7 @@ void		dir_res_iter(t_dir *dir)
 
 void		dir_add_list(t_dir *dir, t_obj *add, int listn)
 {
+
 	if (listn == LIST_DOT)
 		dir_add_dot(dir, add);
 	else if (listn == LIST_CAP)

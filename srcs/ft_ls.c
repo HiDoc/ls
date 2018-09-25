@@ -6,12 +6,11 @@
 /*   By: fmadura <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/16 11:14:22 by fmadura           #+#    #+#             */
-/*   Updated: 2018/07/19 13:59:22 by fmadura          ###   ########.fr       */
+/*   Updated: 2018/09/25 17:03:26 by fmadura          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
-int		list_dir(t_env *env, char *dirname);
+#include "ls_includes.h"
 
 static char *getname_obj(t_dir *dir, t_obj *obj)
 {
@@ -21,6 +20,11 @@ static char *getname_obj(t_dir *dir, t_obj *obj)
 	if (dir && obj)
 	{
 		tmp = ft_strjoin(dir->dirname, "/");
+		if (ft_strcmp(tmp, "//") == 0)
+		{
+			free(tmp);
+			tmp = ft_strdup("/");
+		}
 		tmp = ft_strljoin(tmp, obj->entry->d_name);
 	}
 	return (tmp);
@@ -31,6 +35,8 @@ static int list_free(t_obj *obj, char *tmp)
 	if (obj)
 	{
 		free(obj->stat);
+		if (obj->name)
+			free(obj->name);
 		free(obj);
 	}
 	if (tmp)
@@ -40,6 +46,7 @@ static int list_free(t_obj *obj, char *tmp)
 	}
 	return (0);
 }
+
 int		list_dir_buf(t_dir *dir)
 {
 	t_obj	*obj;
@@ -52,6 +59,7 @@ int		list_dir_buf(t_dir *dir)
 	tmp = getname_obj(dir, obj);
 	if ((stat(tmp, obj->stat)) == -1)
 		return (list_free(obj, tmp));
+	obj->name = strdup(obj->entry->d_name);
 	if (obj->entry->d_name[0])
 	{
 		if (obj->entry->d_name[0] == '.')
@@ -109,16 +117,16 @@ int		list_dir(t_env *env, char *dirname)
 	int		ret;
 
 	ret = 0;
-	printf("%s\n", dirname);
-	if ((dir = dir_new(dirname)) == NULL)
+	if (env->flag & FLAG_R)
+		printf("%s\n", dirname);
+	if ((dir = dir_new(env, dirname)) == NULL)
 		return (1);
 	while ((ret = list_dir_buf(dir)) != 0)
 		ret == -1 ? perror("ft_ls") : 0;
-	print_dir(dir);
-	// ajouter le flag pour la recursivite
-	if (env->flag == 0)
+	dir_res_iter(dir);
+	print_dir(dir, env->flag);
+	if (env->flag & FLAG_R)
 	{
-		dir_res_iter(dir);
 		list_dir_iter(env, dir, dirname, LIST_CAP);
 		list_dir_iter(env, dir, dirname, LIST_MIN);
 	}
@@ -130,9 +138,11 @@ int		main(int argc, char **argv)
 {
 	t_env	env;
 
-	env_init(&env);
-	(void)argc;
-	(void)argv;
-	list_dir(&env, "/dev/fd");
+	env_init(&env, argc, argv);
+	if (env.basedir != NULL)
+	{
+		list_dir(&env, env.basedir);
+		free(env.basedir);
+	}
 	return (0);
 }

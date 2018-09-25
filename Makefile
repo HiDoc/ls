@@ -6,7 +6,7 @@
 #    By: fmadura <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/16 11:12:15 by fmadura           #+#    #+#              #
-#    Updated: 2018/07/19 12:37:20 by fmadura          ###   ########.fr        #
+#    Updated: 2018/09/25 17:06:10 by fmadura          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,6 @@ LIB = -L ./libft/ -lftprintf
 .PHONY : all clean fclean re
 
 all: $(NAME)
-	./ft_ls
 
 $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIB) $(INC) -o $(NAME)
@@ -71,15 +70,15 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 
 clean:
 	@rm -rf $(OBJ_PATH)
+	@rm -rf ./ft_ls.dSym/
 
 fclean: clean
 	@rm -f $(NAME)
 
-fsan: $(OBJ)
-	@$(CC) $(CFLAGS) -g -fsanitize=address $(OBJ) $(LIB) $(INC) -o $(NAME)
-	@./ft_ls
-
 lldb:
 	@$(CC) $(CFLAGS) -g  $(SRC) $(LIB) $(INC) -o $(NAME)
+
+fsani:
+	@$(CC) $(CFLAGS) -g -fsanitize=address $(SRC) $(LIB) $(INC) -o $(NAME)
 
 re: fclean all
